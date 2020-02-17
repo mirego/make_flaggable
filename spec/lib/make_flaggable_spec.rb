@@ -116,7 +116,7 @@ describe "Make Flaggable" do
 
       context 'Argument passed' do
         it 'returns flaggers who have flagged a particular flaggable resource' do
-          FlaggerModel.flaggers(FlaggableModel).should == [@flagger] 
+          FlaggerModel.flaggers(FlaggableModel).should == [@flagger]
         end
 
         it 'returns nothing if no flag is found' do
@@ -140,6 +140,13 @@ describe "Make Flaggable" do
       @flaggable.flagged?.should == true
       @flagger.unflag!(@flaggable)
       @flaggable.flagged?.should == false
+    end
+
+    it "should destroy flagging when flaggable is destroyed" do
+      @flagger.flag!(@flaggable)
+      MakeFlaggable::Flagging.count.should == 1
+      @flaggable.destroy
+      MakeFlaggable::Flagging.count.should == 0
     end
   end
 end
